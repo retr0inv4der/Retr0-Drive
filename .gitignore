@@ -1,0 +1,5 @@
+MyEnv
+__pycache__
+.vscode
+.gitignore
+db.*
