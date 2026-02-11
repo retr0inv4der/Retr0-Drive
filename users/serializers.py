@@ -3,8 +3,14 @@ from .models import Users
 
 
 
-class UserSerializer(serializers.Serializer):
+class UserSerializer(serializers.ModelSerializer):
+    space_left = serializers.DecimalField(
+        max_digits=20, 
+        decimal_places=20, 
+        allow_null=True,
+        required=True
+    )
     class Meta : 
         model = Users 
-        fields = ['username' , 'password'  ]
-        read_only_fields = ['joined' , 'space_left']
+        fields = '__all__'
+        
