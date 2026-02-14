@@ -18,3 +18,10 @@ class UserRegisterAPI(APIView) :
             "message" : "user registered successfully"} ,
              status= status.HTTP_201_CREATED
             )
+    
+class UserLoginAPI(APIView) : 
+    def post(self  , request ) : 
+        ser = UserSerializer(request.data )
+        ser.is_valid(raise_exception=True)
+        return Response({"Logged in"}  , status=status.HTTP_202_ACCEPTED)
+    
