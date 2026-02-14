@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         max_digits=20, 
         decimal_places=20, 
         allow_null=True,
-        required=True
+        required=False
     )
     class Meta : 
         model = Users 
