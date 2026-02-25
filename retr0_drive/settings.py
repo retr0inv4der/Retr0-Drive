@@ -136,4 +136,8 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
 
-AUTH_USER_MODEL = "users.Users"
+AUTHENTICATION_BACKENDS = [
+    "users.backends.AuthWithEmailOrUsername",
+]
+
+AUTH_USER_MODEL = "users.models.Users"
