@@ -140,4 +140,4 @@ AUTHENTICATION_BACKENDS = [
     "users.backends.AuthWithEmailOrUsername",
 ]
 
-AUTH_USER_MODEL = "users.models.Users"
+AUTH_USER_MODEL = "users.Users"

@@ -10,7 +10,7 @@ from rest_framework_simplejwt.exceptions import TokenError , InvalidToken
 from rest_framework.exceptions import ValidationError
 
 from .serializers import UserSerializer
-from SignUpService import SignUpService
+from .SignUpService import SignUpService
 
 class RegisterView(APIView) : 
     permission_classes= [AllowAny]

@@ -1,5 +1,7 @@
 from .models import Users
 from .serializers import SignUpSerializer
+
+
 class SignUpService : 
     def signup(self ,username , email , password ):
         data = {
