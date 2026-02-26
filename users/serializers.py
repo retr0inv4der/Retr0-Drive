@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Users
 from rest_framework.validators import UniqueValidator
+from django.contrib.auth import authenticate
 
 class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,7 +26,32 @@ class SignUpSerializer(serializers.ModelSerializer):
             user.set_password(password) #hashed password
         user.save()
         return user
+
     
+class LoginSerializer(serializers.Serializer) : 
+    login = serializers.CharField()
+    password = serializers.CharField()
+    def validate_login(self , value):
+        if value is None :
+            raise serializers.ValidationError("email or username must be provided")
+        return value
+
+
+    def validate_password(self, value) : 
+        if value is None : 
+            raise serializers.ValidationError("password must be provided")
+        return value
+    
+    def validate(self, data):
+        #uses the custom backend for authentication registered in backends.py bcz of the AUTHENTICATION_BACKENDS in settings.py
+        user = authenticate(username = data['username'] or data['email'] , password= data['password'])
+        if user is None : 
+            raise serializers.ValidationError('invalid credentials.')
+
+        if not user.is_active:
+            raise serializers.ValidationError('User is disabled')
+        data['user'] = user 
+        return data
 
 #serializer for outputing the data
 class UserSerializer(serializers.ModelSerializer):
