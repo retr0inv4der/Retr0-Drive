@@ -21,8 +21,13 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 from users.urls import urlpatterns as UserURLs
+from files.urls import urlpatterns as FileURLs
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path("auth/refresh/" , TokenRefreshView.as_view() ),
     path('admin/', admin.site.urls),
-    path("user/" , include("users.urls"))
-]
+    path("user/" , include("users.urls")),
+    path("files/" , include("files.urls"))
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
