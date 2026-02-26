@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated , AllowAny
 from rest_framework.exceptions import ValidationError
+from rest_framework_simplejwt import tokens
+from rest_framework_simplejwt.exceptions import TokenError
 
 from .serializers import UserSerializer
 from .SignUpService import SignUpService
@@ -53,3 +55,36 @@ class LoginView(APIView) :
             return Response({
                 "error" : e.detail
             },status=status.HTTP_400_BAD_REQUEST)
+
+
+class RefreshTokenView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        refresh_token = request.data.get('refresh')
+        
+        if not refresh_token:
+            return Response({
+                "error": "refresh token is required"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            refresh = tokens.RefreshToken(refresh_token)
+            return Response({
+                'access': str(refresh.access_token)
+            }, status=status.HTTP_200_OK)
+        
+        except TokenError as e:
+            return Response({
+                "error": "invalid or expired refresh token"
+            }, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class GetUserInfoView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response({
+            "user": serializer.data
+        }, status=status.HTTP_200_OK)
