@@ -33,7 +33,7 @@ class RegisterView(APIView) :
         except ValidationError as e : 
             return Response({
                 "error" : e.detail
-            },status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            },status=status.HTTP_400_BAD_REQUEST)
         
 
 class LoginView(APIView) : 
@@ -47,9 +47,9 @@ class LoginView(APIView) :
             return Response({
                 'message': 'login was successful',
                 'tokens' : tokens
-            },status=status.HTTP_202_ACCEPTED)
+            },status=status.HTTP_200_OK)
         
         except ValidationError as e : 
             return Response({
                 "error" : e.detail
-            },status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            },status=status.HTTP_400_BAD_REQUEST)

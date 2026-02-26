@@ -19,7 +19,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         return value
         
     def create(self, validated_data):
-        print("validated data:" , validated_data)
+        
         password = validated_data.pop('password' , None)
         user = Users(**validated_data)
         if password :
@@ -29,13 +29,9 @@ class SignUpSerializer(serializers.ModelSerializer):
 
     
 class LoginSerializer(serializers.Serializer) : 
-    username = serializers.CharField(required = False)
+    username = serializers.CharField(required = False )
     email = serializers.EmailField(required = False )
     password = serializers.CharField()
-    def validate_login(self , value):
-        if value is None :
-            raise serializers.ValidationError("email or username must be provided")
-        return value
 
 
     def validate_password(self, value) : 
@@ -43,9 +39,14 @@ class LoginSerializer(serializers.Serializer) :
             raise serializers.ValidationError("password must be provided")
         return value
     
+    def validate_emptiness(self , data ) :
+        if data.get('username') is None and data.get('email') is None : 
+            raise serializers.ValidationError("username or email should be provided")
+        
     def validate(self, data):
+        self.validate_emptiness(data=data)
         #uses the custom backend for authentication registered in backends.py bcz of the AUTHENTICATION_BACKENDS in settings.py
-        user = authenticate(username = data.get('username') or data.get('email') , password= data['password'])
+        user = authenticate(username = data.get('username') or data.get('email') , password= data.get('password'))
         if user is None : 
             raise serializers.ValidationError('invalid credentials.')
 
