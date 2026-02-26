@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.core.files.storage import default_storage
 from .models import File
 
 class FileService:
@@ -22,3 +23,12 @@ class FileService:
 
     def list_files(self, user):
         return File.objects.filter(user=user).order_by('-uploaded_at')
+
+    def get_file_for_download(self, user, file_id):
+        try:
+            file = File.objects.get(id=file_id, user=user)
+            if not default_storage.exists(file.file.name):
+                return None, "File not found on storage"
+            return file, None
+        except File.DoesNotExist:
+            return None, "File not found"
