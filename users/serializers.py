@@ -29,7 +29,8 @@ class SignUpSerializer(serializers.ModelSerializer):
 
     
 class LoginSerializer(serializers.Serializer) : 
-    login = serializers.CharField()
+    username = serializers.CharField(required = False)
+    email = serializers.EmailField(required = False )
     password = serializers.CharField()
     def validate_login(self , value):
         if value is None :
@@ -44,7 +45,7 @@ class LoginSerializer(serializers.Serializer) :
     
     def validate(self, data):
         #uses the custom backend for authentication registered in backends.py bcz of the AUTHENTICATION_BACKENDS in settings.py
-        user = authenticate(username = data['username'] or data['email'] , password= data['password'])
+        user = authenticate(username = data.get('username') or data.get('email') , password= data['password'])
         if user is None : 
             raise serializers.ValidationError('invalid credentials.')
 
